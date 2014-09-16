@@ -8,4 +8,6 @@ before_install:
 rvm:
   - 1.9.3
 script:
-  sudo puppet apply --verbose tests/init.pp
+  - bundle exec rake lint
+  - bundle exec rake syntax
+  - sudo puppet apply --verbose tests/init.pp
