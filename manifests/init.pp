@@ -1,6 +1,8 @@
 # == Class: tessera
 #
-# Full description of class tessera here.
+# This module deploys Tessera (an attractive front-end for Graphite) from it's git repo.
+# It sets up the virtualenv, installs the project requirements, and sets up gunicorn to
+# serve the application.
 #
 # === Parameters
 #
@@ -12,21 +14,15 @@
 # [*repo_url*]
 #  Optional url for the project repository
 #
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
+# [*version*]
+#  Specify the version of the application. This is currently used to reference a git tag.
 #
 # === Examples
 #
-#  class { tessera:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
+#  class { 'tessera':
+#    app_root => '/opt/tessera',
+#    repo_url => 'git://github.com/urbanairship/tessera.git'
+#    version  => 'v0.4.4',
 #  }
 #
 # === Authors
@@ -61,17 +57,19 @@ class tessera(
 
 
   python::virtualenv { 'tessera_env':
-    cwd      => $app_root,
+    cwd     => $app_root,
+    require =>  Vcsrepo[$app_root],
   }
 
   python::requirements { "${app_root}/requirements.txt":
     ensure     => $ensure,
     virtualenv => $app_root,
+    require =>  Vcsrepo[$app_root],
   }
 
   python::gunicorn { 'tessera':
     ensure     => $ensure,
     virtualenv => $app_root,
-    virtualenv => $app_root,
+    require =>  Vcsrepo[$app_root],
   }
 }
