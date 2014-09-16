@@ -56,7 +56,7 @@ class tessera(
     source   => $repo_url,
     revision => $version,
     user     => $tessera_user,
-    group    => $tessera_user,
+    group    => $tessera_group,
   }
 
 
