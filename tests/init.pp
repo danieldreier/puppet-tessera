@@ -9,4 +9,10 @@
 # Learn more about module testing here:
 # http://docs.puppetlabs.com/guides/tests_smoke.html
 #
-include tessera
+class { 'tessera':
+  app_root      => '/opt/tessera',
+  repo_url      => 'git://github.com/urbanairship/tessera.git',
+  version       => 'v0.4.4',
+  tessera_user  => 'www-data',
+  tessera_group => 'www-data',
+}

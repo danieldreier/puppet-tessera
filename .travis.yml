@@ -1,0 +1,13 @@
+---
+language: ruby
+bundler_args: --without development
+before_install:
+  - curl getpuppet.whilefork.com | sudo bash
+  - puppet module build
+  - sudo puppet module install pkg/Ziaunys-tessera-*.tar.gz
+rvm:
+  - 1.9.3
+script:
+  - bundle exec rake lint
+  - bundle exec rake syntax
+  - sudo puppet apply --verbose tests/init.pp
