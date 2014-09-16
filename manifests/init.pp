@@ -6,9 +6,11 @@
 #
 # Document parameters here.
 #
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+# [*app_root*]
+#  The root directory of the Tessera application
+#
+# [*repo_url*]
+#  Optional url for the project repository
 #
 # === Variables
 #
@@ -29,13 +31,47 @@
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Author Name <eric.zounes@puppetlabs.com>
 #
 # === Copyright
 #
 # Copyright 2014 Your name here, unless otherwise noted.
 #
-class tessera {
+class tessera(
+  $app_root = undef,
+  $repo_url = undef,
+  $version = undef,
+  $tessera_user = undef,
+  $tessera_group = undef,
+){
+
+  if $tessera_user == undef {
+    fail("Must define \$tessera_user.")
+  }
+  if $tessera_group == undef {
+    fail("Must define \$tessera_group.")
+  }
+  vcsrepo { $app_root:
+    provider => git,
+    source   => $repo_url,
+    revision => $version,
+    user     => $tessera_user,
+    group    => $tessera_user,
+  }
 
 
+  python::virtualenv { 'tessera_env':
+    cwd      => $app_root,
+  }
+
+  python::requirements { "${app_root}/requirements.txt":
+    ensure     => $ensure,
+    virtualenv => $app_root,
+  }
+
+  python::gunicorn { 'tessera':
+    ensure     => $ensure,
+    virtualenv => $app_root,
+    virtualenv => $app_root,
+  }
 }
