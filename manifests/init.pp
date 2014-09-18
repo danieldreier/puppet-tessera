@@ -56,8 +56,14 @@ class tessera(
     group    => $tessera_group,
   }
 
+  # Templating Python with erb is dumb.
   file { "${app_root}/tessera/config.py":
-    ensure => $ensure
+    ensure  => $ensure,
+    content => template('tessera/config.py.erb')
+    mode    =>  0644,
+    user    =>  $tessera_user,
+    group   =>  $tessera_group,
+    before  => Vcsrepo[$app_root],
   }
 
   python::virtualenv { 'tessera_env':
@@ -78,7 +84,6 @@ class tessera(
   }
 
   # This is gross. I might not manage db init. Maybe the orchestration tool should do it.
-
   $venv_tessera = ". bin/activate &&"
   Exec {
     user  => $tessera_user,
