@@ -34,6 +34,7 @@
 # Copyright 2014 Your name here, unless otherwise noted.
 #
 class tessera(
+  $ensure = undef,
   $app_root = undef,
   $repo_url = undef,
   $version = undef,
@@ -55,6 +56,9 @@ class tessera(
     group    => $tessera_group,
   }
 
+  file { "${app_root}/tessera/config.py":
+    ensure => $ensure
+  }
 
   python::virtualenv { 'tessera_env':
     cwd     => $app_root,
@@ -71,5 +75,25 @@ class tessera(
     ensure     => $ensure,
     virtualenv => $app_root,
     require =>  Vcsrepo[$app_root],
+  }
+
+  # This is gross. I might not manage db init. Maybe the orchestration tool should do it.
+
+  $venv_tessera = ". bin/activate &&"
+  Exec {
+    user  => $tessera_user,
+    group => $tessera_group,
+  }
+
+  exec { 'init_db':
+    command => "${venv_tessera} inv initdb"
+    unless  => "ls ${app_root}/tessera/tessera.db"
+    cwd     =>  $app_root,
+    require => File[$tessera_config],
+    before  =>  [
+                  Python::Virtualenv['tessera_env'],
+                  Python::Requirements["${app_root}/requirements.txt"],
+                  File[$tessera_config],
+              ],
   }
 }
