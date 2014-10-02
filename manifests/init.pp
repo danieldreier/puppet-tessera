@@ -59,7 +59,7 @@ class tessera(
   # Templating Python with erb is dumb.
   file { "${app_root}/tessera/config.py":
     ensure  => $ensure,
-    content => template('tessera/config.py.erb')
+    content => template('tessera/config.py.erb'),
     mode    =>  0644,
     user    =>  $tessera_user,
     group   =>  $tessera_group,
