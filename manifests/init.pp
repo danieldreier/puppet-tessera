@@ -91,8 +91,8 @@ class tessera(
   }
 
   exec { 'init_db':
-    command => "${venv_tessera} inv initdb"
-    unless  => "ls ${app_root}/tessera/tessera.db"
+    command => "${venv_tessera} inv initdb",
+    unless  => "ls ${app_root}/tessera/tessera.db",
     cwd     =>  $app_root,
     require => File[$tessera_config],
     before  =>  [
