@@ -81,7 +81,6 @@ class tessera(
     owner        =>  $tessera_user,
     group        =>  $tessera_group,
     require      =>  Vcsrepo[$app_root],
->>>>>>> The module should be usable now. Needs tests!
   }
 
     python::requirements { "${app_root}/requirements.txt":
@@ -148,16 +147,6 @@ class tessera(
   }
 
   exec { 'init_db':
-<<<<<<< HEAD
-    command => "${venv_tessera} inv initdb",
-    unless  => "ls ${app_root}/tessera/tessera.db",
-    cwd     =>  $app_root,
-    require => File[$tessera_config],
-    before  =>  [
-                  Python::Virtualenv['tessera_env'],
-                  Python::Requirements["${app_root}/requirements.txt"],
-                  File[$tessera_config],
-=======
     command  => "${venv_tessera} inv initdb",
     provider => 'shell',
     creates  => "${app_root}/tessera/tessera.db",
@@ -166,7 +155,6 @@ class tessera(
                   Python::Virtualenv[$app_root],
                   Python::Pip['invoke'],
                   Python::Pip['invocations'],
->>>>>>> The module should be usable now. Needs tests!
               ],
   }
 }
