@@ -34,12 +34,20 @@
 # Copyright 2014 Your name here, unless otherwise noted.
 #
 class tessera(
-  $ensure = undef,
   $app_root = undef,
+  $dashboard_appname = 'Tessera',
+  $display_timezone = '-3h',
+  $debug = false,
+  $default_theme = 'light',
+  $ensure = undef,
+  $graphite_url = undef,
+  $gunicorn_sock_path = undef,
   $repo_url = undef,
-  $version = undef,
+  $secret_key = undef,
+  $sqlalchemy_db_uri = 'sqlite:///tessera.db',
   $tessera_user = undef,
   $tessera_group = undef,
+  $version = undef,
 ){
 
   if $tessera_user == undef {
@@ -48,39 +56,88 @@ class tessera(
   if $tessera_group == undef {
     fail("Must define \$tessera_group.")
   }
+
   vcsrepo { $app_root:
-    provider => git,
+    provider => 'git',
     source   => $repo_url,
     revision => $version,
-    user     => $tessera_user,
+    owner    => $tessera_user,
     group    => $tessera_group,
   }
 
   # Templating Python with erb is dumb.
-  file { "${app_root}/tessera/config.py":
-    ensure  => $ensure,
-    content => template('tessera/config.py.erb'),
-    mode    =>  0644,
-    user    =>  $tessera_user,
+  #  file { "${app_root}/tessera/config.py":
+  #  ensure  => $ensure,
+  #  content => template('tessera/config.py.erb'),
+  #  mode    =>  0644,
+  #  user    =>  $tessera_user,
+  #  group   =>  $tessera_group,
+  #  before  => Vcsrepo[$app_root],
+  # }
+
+  python::virtualenv { $app_root:
+    cwd          => $app_root,
+    requirements => "${app_root}/requirements.txt",
+    owner        =>  $tessera_user,
+    group        =>  $tessera_group,
+    require      =>  Vcsrepo[$app_root],
+>>>>>>> The module should be usable now. Needs tests!
+  }
+
+    python::requirements { "${app_root}/requirements.txt":
+    virtualenv => $app_root,
+    require    =>  Vcsrepo[$app_root],
+    owner      => $tessera_user,
+    group      => $tessera_group,
+   }
+  
+  python::pip { 'invoke':
+    pkgname    => 'invoke',
+    virtualenv => $app_root,
+    owner      => $tessera_user,
+  }
+
+  python::pip { 'invocations':
+    pkgname    => 'invocations',
+    virtualenv => $app_root,
+    owner      => $tessera_user,
+  }
+
+  python::pip { 'gunicorn':
+    ensure     => '0.18.5',
+    pkgname    =>  'gunicorn',
+    virtualenv => $app_root,
+    owner      => $tessera_user,
+  }
+
+ python::gunicorn { 'tessera':
+    ensure     => $ensure,
+    virtualenv => $app_root,
+    appmodule  => 'tessera:app',
+    dir        => "${app_root}/tessera",
+    require    => [Vcsrepo[$app_root],
+                    File["/var/run/tessera"],
+                    Python::Virtualenv[$app_root],
+                    Python::Pip['gunicorn'],],
+    bind       => $gunicorn_sock_path,
+    owner      => $tessera_user,
+    group      => $tessera_group,
+  }
+
+  file { "/var/run/tessera":
+    ensure  => directory,
+    recurse => true,
+    owner   => $tessera_user,
     group   =>  $tessera_group,
-    before  => Vcsrepo[$app_root],
+    mode    => 0740,
   }
 
-  python::virtualenv { 'tessera_env':
-    cwd     => $app_root,
-    require =>  Vcsrepo[$app_root],
-  }
-
-  python::requirements { "${app_root}/requirements.txt":
-    ensure     => $ensure,
-    virtualenv => $app_root,
-    require =>  Vcsrepo[$app_root],
-  }
-
-  python::gunicorn { 'tessera':
-    ensure     => $ensure,
-    virtualenv => $app_root,
-    require =>  Vcsrepo[$app_root],
+  file { "/etc/gunicorn.d":
+    ensure  => directory,
+    recurse => true,
+    owner   => $tessera_user,
+    group   =>  $tessera_group,
+    mode    => 0740,
   }
 
   # This is gross. I might not manage db init. Maybe the orchestration tool should do it.
@@ -91,6 +148,7 @@ class tessera(
   }
 
   exec { 'init_db':
+<<<<<<< HEAD
     command => "${venv_tessera} inv initdb",
     unless  => "ls ${app_root}/tessera/tessera.db",
     cwd     =>  $app_root,
@@ -99,6 +157,16 @@ class tessera(
                   Python::Virtualenv['tessera_env'],
                   Python::Requirements["${app_root}/requirements.txt"],
                   File[$tessera_config],
+=======
+    command  => "${venv_tessera} inv initdb",
+    provider => 'shell',
+    creates  => "${app_root}/tessera/tessera.db",
+    cwd      =>  $app_root,
+    require =>  [
+                  Python::Virtualenv[$app_root],
+                  Python::Pip['invoke'],
+                  Python::Pip['invocations'],
+>>>>>>> The module should be usable now. Needs tests!
               ],
   }
 }
