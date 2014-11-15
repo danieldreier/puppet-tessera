@@ -76,7 +76,7 @@ class tessera(
     ensure  => $ensure,
     content => template('tessera/config.py.erb'),
     mode    =>  0644,
-    user    =>  $tessera_user,
+    owner   =>  $tessera_user,
     group   =>  $tessera_group,
     before  => Vcsrepo[$app_root],
   }
