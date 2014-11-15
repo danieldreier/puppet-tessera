@@ -7,13 +7,6 @@ GRAPHITE_URL = <%= scope['tessera::graphite_url'] %>
 DISPLAY_TIMEZONE = <%= scope['tessera::display_timezone'] %>
 INTERACTIVE_CHARTS_DEFAULT = <%= scope['tessera::interactive_charts_default'] %>
 INTERACTIVE_CHARTS_RENDERER <%= scope['tessera::interactive_charts_renderer'] %>
-<% if scope['tessera::dashboard_range_picker'] != undef %>
-DASHBOARD_RANGE_PICKER = [
-<% scope['tessera::dashboard_range_picker'].each do | k, v | -%>
-    (<%= k %>, <%= v %>),
-<% end -%>
-]
-<% else %>
 DASHBOARD_RANGE_PICKER = [
       ('Past Hour',   '-1h'),
       ('Past 3 Hrs',  '-3h'),
@@ -22,15 +15,6 @@ DASHBOARD_RANGE_PICKER = [
       ('Past Wk',     '-1w'),
       ('Past 2 Wks',  '-2w'),
 ]
-<% end %>
-
-<% if scope['tessera::dashboard_refresh_intervals'] %>
-DASHBOARD_REFRESH_INTERVALS = [
-<% scope['tessera::dashboard_refresh_intervals'].each do | k, v | -%>
-    (<%= k %>, <%= v %>),
-<% end -%>
-]
-<% else %>
 DASHBOARD_REFRESH_INTERVALS = [
     ('None',             0),
     ('30 seconds',      30),
