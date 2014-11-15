@@ -164,4 +164,5 @@ class tessera(
     provider => 'shell',
     creates  => "${app_root}/tessera/static",
     cwd      => $app_root,
+  }
 }
