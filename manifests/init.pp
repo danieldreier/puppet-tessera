@@ -103,7 +103,7 @@ class tessera(
   }
 
   python::pip { 'gunicorn':
-    ensure     => '0.18.5',
+    ensure     => '0.14.5',
     pkgname    =>  'gunicorn',
     virtualenv => $app_root,
     owner      => $tessera_user,
