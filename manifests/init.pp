@@ -35,6 +35,7 @@
 #
 class tessera(
   $app_root = undef,
+  $build_assets = false,
   $dashboard_appname = 'Tessera',
   $display_timezone = '-3h',
   $debug = false,
@@ -42,6 +43,8 @@ class tessera(
   $ensure = undef,
   $graphite_url = undef,
   $gunicorn_sock_path = undef,
+  $init_db = false,
+  $pid_dir = '/var/run/tessera',
   $repo_url = undef,
   $secret_key = undef,
   $sqlalchemy_db_uri = 'sqlite:///tessera.db',
@@ -66,14 +69,14 @@ class tessera(
   }
 
   # Templating Python with erb is dumb.
-  #  file { "${app_root}/tessera/config.py":
-  #  ensure  => $ensure,
-  #  content => template('tessera/config.py.erb'),
-  #  mode    =>  0644,
-  #  user    =>  $tessera_user,
-  #  group   =>  $tessera_group,
-  #  before  => Vcsrepo[$app_root],
-  # }
+  file { "${app_root}/tessera/config.py":
+    ensure  => $ensure,
+    content => template('tessera/config.py.erb'),
+    mode    =>  0644,
+    user    =>  $tessera_user,
+    group   =>  $tessera_group,
+    before  => Vcsrepo[$app_root],
+  }
 
   python::virtualenv { $app_root:
     cwd          => $app_root,
@@ -83,13 +86,13 @@ class tessera(
     require      =>  Vcsrepo[$app_root],
   }
 
-    python::requirements { "${app_root}/requirements.txt":
+  python::requirements { "${app_root}/requirements.txt":
     virtualenv => $app_root,
     require    =>  Vcsrepo[$app_root],
     owner      => $tessera_user,
     group      => $tessera_group,
-   }
-  
+  }
+
   python::pip { 'invoke':
     pkgname    => 'invoke',
     virtualenv => $app_root,
@@ -123,9 +126,8 @@ class tessera(
     group      => $tessera_group,
   }
 
-  file { "/var/run/tessera":
+  file { $pid_dir:
     ensure  => directory,
-    recurse => true,
     owner   => $tessera_user,
     group   =>  $tessera_group,
     mode    => 0740,
@@ -139,11 +141,15 @@ class tessera(
     mode    => 0740,
   }
 
-  # This is gross. I might not manage db init. Maybe the orchestration tool should do it.
   $venv_tessera = ". bin/activate &&"
   Exec {
-    user  => $tessera_user,
-    group => $tessera_group,
+    user    => $tessera_user,
+    group   => $tessera_group,
+    require =>  [
+                  Python::Virtualenv[$app_root],
+                  Python::Pip['invoke'],
+                  Python::Pip['invocations'],
+              ],
   }
 
   exec { 'init_db':
@@ -151,10 +157,11 @@ class tessera(
     provider => 'shell',
     creates  => "${app_root}/tessera/tessera.db",
     cwd      =>  $app_root,
-    require =>  [
-                  Python::Virtualenv[$app_root],
-                  Python::Pip['invoke'],
-                  Python::Pip['invocations'],
-              ],
   }
+
+  exec { 'build_assets':
+    command  => 'grunt',
+    provider => 'shell',
+    creates  => "${app_root}/tessera/static",
+    cwd      => $app_root,
 }
