@@ -7,7 +7,7 @@ GRAPHITE_URL = <%= scope['tessera::graphite_url'] %>
 DISPLAY_TIMEZONE = <%= scope['tessera::display_timezone'] %>
 INTERACTIVE_CHARTS_DEFAULT = <%= scope['tessera::interactive_charts_default'] %>
 INTERACTIVE_CHARTS_RENDERER <%= scope['tessera::interactive_charts_renderer'] %>
-<% if scope['tessera::dashboard_range_picker'] %>
+<% if scope['tessera::dashboard_range_picker'] != undef %>
 DASHBOARD_RANGE_PICKER = [
 <% scope['tessera::dashboard_range_picker'].each do | k, v | -%>
     (<%= k %>, <%= v %>),
