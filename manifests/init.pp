@@ -148,11 +148,6 @@ class tessera(
   Exec {
     user    => $tessera_user,
     group   => $tessera_group,
-    require =>  [
-                  Python::Virtualenv[$app_root],
-                  Python::Pip['invoke'],
-                  Python::Pip['invocations'],
-              ],
   }
 
   exec { 'init_db':
