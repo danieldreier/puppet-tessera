@@ -78,7 +78,7 @@ class tessera(
     mode    =>  0644,
     owner   =>  $tessera_user,
     group   =>  $tessera_group,
-    before  => Vcsrepo[$app_root],
+    require => Vcsrepo[$app_root],
   }
 
   python::virtualenv { $app_root:
@@ -160,6 +160,11 @@ class tessera(
     provider => 'shell',
     creates  => "${app_root}/tessera/tessera.db",
     cwd      =>  $app_root,
+    require =>  [
+                  Python::Virtualenv[$app_root],
+                  Python::Pip['invoke'],
+                  Python::Pip['invocations'],
+              ],
   }
 
   exec { 'build_assets':
@@ -167,5 +172,8 @@ class tessera(
     provider => 'shell',
     creates  => "${app_root}/tessera/static",
     cwd      => $app_root,
+    require =>  [
+                  Python::Virtualenv[$app_root],
+              ],
   }
 }
