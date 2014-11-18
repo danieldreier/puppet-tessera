@@ -150,25 +150,29 @@ class tessera(
     group   => $tessera_group,
   }
 
-  exec { 'init_db':
-    command  => "${venv_tessera} inv initdb",
-    provider => 'shell',
-    creates  => "${app_root}/tessera/tessera.db",
-    cwd      =>  $app_root,
-    require =>  [
-                  Python::Virtualenv[$app_root],
-                  Python::Pip['invoke'],
-                  Python::Pip['invocations'],
-              ],
+  if $init_db {
+    exec { 'init_db':
+      command  => "${venv_tessera} inv initdb",
+      provider => 'shell',
+      creates  => "${app_root}/tessera/tessera.db",
+      cwd      =>  $app_root,
+      require =>  [
+                    Python::Virtualenv[$app_root],
+                    Python::Pip['invoke'],
+                    Python::Pip['invocations'],
+                ],
+    }
   }
 
-  exec { 'build_assets':
-    command  => 'grunt',
-    provider => 'shell',
-    creates  => "${app_root}/tessera/static",
-    cwd      => $app_root,
-    require =>  [
-                  Python::Virtualenv[$app_root],
-              ],
+  if $build_assets {
+    exec { 'build_assets':
+      command  => 'grunt',
+      provider => 'shell',
+      creates  => "${app_root}/tessera/static",
+      cwd      => $app_root,
+      require =>  [
+                    Python::Virtualenv[$app_root],
+                ],
+    }
   }
 }
