@@ -52,6 +52,9 @@
 # [*pid_dir*]
 #  Set the path of the pid directory. This is where the pid file will live.
 #
+# [*migration_dir*]
+#  Directory to perform the db migration.
+#
 # [*repo_url*]
 #  Optional url for the project repository
 #
@@ -91,6 +94,7 @@ class tessera(
   $init_db = false,
   $interactive_charts_default = 'True',
   $interactive_charts_renderer = 'nvd3',
+  $migration_dir = 'migrations',
   $pid_dir = '/var/run/tessera',
   $repo_url = undef,
   $secret_key = undef,

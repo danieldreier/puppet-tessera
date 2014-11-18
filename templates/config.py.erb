@@ -1,12 +1,12 @@
 DEBUG = <%= scope['tessera::debug'] %>
-SECRET_KEY = <%= scope['tessera::secret_key'] %>
-DEFAULT_THEME = <%= scope['tessera::default_theme'] %>
-DASHBOARD_APPNAME = <%= scope['tessera::dashboard_appname'] %>
-SQLALCHEMY_DATABASE_URI = <%= scope['tessera::sqlalchemy_db_uri'] %>
-GRAPHITE_URL = <%= scope['tessera::graphite_url'] %>
-DISPLAY_TIMEZONE = <%= scope['tessera::display_timezone'] %>
-INTERACTIVE_CHARTS_DEFAULT = <%= scope['tessera::interactive_charts_default'] %>
-INTERACTIVE_CHARTS_RENDERER <%= scope['tessera::interactive_charts_renderer'] %>
+SECRET_KEY = '<%= scope['tessera::secret_key'] %>'
+DEFAULT_THEME = '<%= scope['tessera::default_theme'] %>'
+DASHBOARD_APPNAME = '<%= scope['tessera::dashboard_appname'] %>'
+SQLALCHEMY_DATABASE_URI = '<%= scope['tessera::sqlalchemy_db_uri'] %>'
+GRAPHITE_URL = '<%= scope['tessera::graphite_url'] %>'
+DISPLAY_TIMEZONE = '<%= scope['tessera::display_timezone'] %>'
+INTERACTIVE_CHARTS_DEFAULT = '<%= scope['tessera::interactive_charts_default'] %>'
+INTERACTIVE_CHARTS_RENDERER = '<%= scope['tessera::interactive_charts_renderer'] %>'
 DASHBOARD_RANGE_PICKER = [
       ('Past Hour',   '-1h'),
       ('Past 3 Hrs',  '-3h'),
@@ -25,4 +25,5 @@ DASHBOARD_REFRESH_INTERVALS = [
     ('30 minutes', 30 * 60),
     ('1 hour',     60 * 60)
 ]
-DEFAULT_REFRESH_INTERVAL = <%= scope['tessera::default_refresh_interval'] %>
+DEFAULT_REFRESH_INTERVAL = '<%= scope['tessera::default_refresh_interval'] %>'
+MIGRATION_DIR = '<%= scope['tessera::migration_dir'] %>'
