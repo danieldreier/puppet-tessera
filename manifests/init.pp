@@ -19,7 +19,7 @@
 #  Set the default name of the application which will appear on the main page. Rename to whatever
 #  you want.
 #
-# [*dashboard_refresh_interval*]
+# [*default_refresh_interval*]
 #  The default interval at which the dashboard will refresh.
 #
 # [*debug*]
@@ -84,7 +84,7 @@ class tessera(
   $app_root = undef,
   $build_assets = false,
   $dashboard_appname = 'Tessera',
-  $dashboard_refresh_interval = '60',
+  $default_refresh_interval = '60',
   $debug = 'False',
   $default_theme = 'light',
   $display_timezone = 'Etc/UTC',
