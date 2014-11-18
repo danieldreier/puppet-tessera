@@ -211,7 +211,7 @@ class tessera(
 
   if $build_assets {
     exec { 'build_assets':
-      command  => 'grunt',
+      command  => 'npm install && grunt',
       provider => 'shell',
       creates  => "${app_root}/tessera/static",
       cwd      => $app_root,
