@@ -213,7 +213,7 @@ class tessera(
     exec { 'build_assets':
       command  => 'npm install && grunt',
       provider => 'shell',
-      creates  => "${app_root}/tessera/static",
+      creates  => "${app_root}/tessera/static/app.js",
       cwd      => $app_root,
       require =>  [
                     Python::Virtualenv[$app_root],
