@@ -3,9 +3,7 @@ SECRET_KEY = <%= scope['tessera::secret_key'] %>
 DEFAULT_THEME = <%= scope['tessera::default_theme'] %>
 DASHBOARD_APPNAME = <%= scope['tessera::dashboard_appname'] %>
 SQLALCHEMY_DATABASE_URI = <%= scope['tessera::sqlalchemy_db_uri'] %>
-<% if not scope['tessera::graphite_url'] -%>
 GRAPHITE_URL = <%= scope['tessera::graphite_url'] %>
-<% end -%>
 DISPLAY_TIMEZONE = <%= scope['tessera::display_timezone'] %>
 INTERACTIVE_CHARTS_DEFAULT = <%= scope['tessera::interactive_charts_default'] %>
 INTERACTIVE_CHARTS_RENDERER <%= scope['tessera::interactive_charts_renderer'] %>
