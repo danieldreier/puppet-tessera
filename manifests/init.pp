@@ -11,9 +11,53 @@
 # [*app_root*]
 #  The root directory of the Tessera application
 #
+# [*build_assets*]
+#  A boolean to set whether or not this module will build the assets for the application
+#  using grunt. Grunt needs to be installed for this to work.
+#
+# [*dashboard_appname*]
+#  Set the default name of the application which will appear on the main page. Rename to whatever
+#  you want.
+#
+# [*dashboard_refresh_interval*]
+#  The default interval at which the dashboard will refresh.
+#
+# [*debug*]
+#  Turn on debug mode.
+#
+# [*default_theme*]
+#  The default dashboard theme. See the Tessera docs for default themes.
+#
+# [*display_timezone*]
+#  The default timezone displayed on graphs.
+#
+# [*ensure*]
+#  Set to present or absent to install/remove the application.
+#
+# [*graphite_url*]
+#  The full url to the default Graphite server.
+#
+# [*gunicorn_sock_path*]
+#  The full path to the gunicorn socket.
+#
+# [*init_db*]
+#  A boolean to indicate whether the module should initialize the sqlite database.
+#
+# [*interactive_charts_default*]
+#  Set the default display type for charts. See the Tessera docs for details.
+#
+# [*interactive_charts_renderer*]
+#  Set the rendering engine for charts. See the Tessera docs for details.
+#
+# [*pid_dir*]
+#  Set the path of the pid directory. This is where the pid file will live.
+#
 # [*repo_url*]
 #  Optional url for the project repository
 #
+# [*secret_key*]
+#
+
 # [*version*]
 #  Specify the version of the application. This is currently used to reference a git tag.
 #
@@ -38,9 +82,9 @@ class tessera(
   $build_assets = false,
   $dashboard_appname = 'Tessera',
   $dashboard_refresh_interval = '60',
-  $display_timezone = 'Etc/UTC',
   $debug = 'False',
   $default_theme = 'light',
+  $display_timezone = 'Etc/UTC',
   $ensure = undef,
   $graphite_url = undef,
   $gunicorn_sock_path = undef,
@@ -64,6 +108,7 @@ class tessera(
   }
 
   vcsrepo { $app_root:
+    ensure   => $ensure,
     provider => 'git',
     source   => $repo_url,
     revision => $version,
