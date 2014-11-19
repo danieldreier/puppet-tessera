@@ -56,11 +56,17 @@
 #  Directory to perform the db migration.
 #
 # [*repo_url*]
-#  Optional url for the project repository
+#  Optional url for the project repository.
 #
 # [*secret_key*]
+#  Set to enable secure sessions.
 #
-
+# [*server_address*]
+#  Set the bind address for the dev server. Only necessary if testing.
+#
+# [*server_port*]
+#  Set the listen port for the dev server. Only necessary if testing.
+#
 # [*version*]
 #  Specify the version of the application. This is currently used to reference a git tag.
 #
@@ -84,7 +90,7 @@ class tessera(
   $app_root = undef,
   $build_assets = false,
   $dashboard_appname = 'Tessera',
-  $default_refresh_interval = '60',
+  $default_refresh_interval = 60,
   $debug = 'False',
   $default_theme = 'light',
   $display_timezone = 'Etc/UTC',
@@ -97,7 +103,9 @@ class tessera(
   $migration_dir = 'migrations',
   $pid_dir = '/var/run/tessera',
   $repo_url = undef,
-  $secret_key = undef,
+  $secret_key = 'REPLACE ME',
+  $server_address = '0.0.0.0',
+  $server_port = 5000,
   $sqlalchemy_db_uri = 'sqlite:///tessera.db',
   $tessera_user = undef,
   $tessera_group = undef,
