@@ -6,7 +6,7 @@
 2. [Module Description - What the module does and why it is useful](#module-description)
 3. [Setup - The basics of getting started with the Tessera module](#setup)
     * [What the Tessera module affects](#what-tessera-affects)
-    * [Beginning with ntp](#beginning-with-ntp)
+    * [Beginning with Tessera](#beginning-with-tesera)
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
@@ -14,15 +14,16 @@
 
 ##Overview
 
-The ntp module installs, configures, and manages the NTP service.
+Tessera is a Graphite front-end developed by Urban Airship. The project is found here:
+ [https://github.com/urbanairship/tessera](https://github.com/urbanairship/tessera)
 
 ##Module Description
 
-The ntp module handles installing, configuring, and running NTP across a range of operating systems and distributions.
+The Tessera module installs the Tessera app in a virtualenv, optionally initializes the sqlite db and assets, and sets up Gunicorn. In order to use this module you'll need to adhere to the requirements in the Modulefile. If you want to build Tessera's assets, you'll need to manage nodejs and grunt elsewhere in your Puppet code.
 
 ##Setup
 
-###What ntp affects
+###What the Tessera module affects
 
 * Clones the Tessera repo.
 * Creates a Python virtualenv in the Tessera repo.
@@ -31,7 +32,7 @@ The ntp module handles installing, configuring, and running NTP across a range o
 * Optionally initializes the sqlite database.
 * Optionally installs js dependencies and builds assets.
 
-###Beginning with ntp
+###Beginning with the Tessera module
 
 The following class declaration will deploy the Tessera, repo, initialize the sqlite db, and build the assets.
 
