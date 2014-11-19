@@ -82,10 +82,6 @@
 #
 # Author Name <eric.zounes@puppetlabs.com>
 #
-# === Copyright
-#
-# Copyright 2014 Your name here, unless otherwise noted.
-#
 class tessera(
   $app_root = undef,
   $build_assets = false,
