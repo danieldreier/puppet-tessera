@@ -56,7 +56,7 @@ class { '::tessera':
 
 There is only one class in the Tessera module. It has the ability to set up all the components in the correct order.
 
-###I don't want to build assets or use sqlite.
+###I don't want to build assets or initialize the database.
 
 Modify the following parameters.
 
@@ -68,6 +68,18 @@ class { '::tessera':
 }
 
 ```
+
+###Use Postgresql instead of Sqlite.
+
+Modify the following parameters.
+
+```puppet
+class { '::tessera':
+    sqlalchemy_db_uri => 'postgresql://username:password@tessera-db01-prod.example.net',
+}
+
+```
+
 
 ###Want prettier defaults?
 
