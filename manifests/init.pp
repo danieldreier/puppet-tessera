@@ -91,6 +91,7 @@ class tessera(
   $dashboard_appname = 'Tessera',
   $default_refresh_interval = 60,
   $debug = 'False',
+  $default_from_time = '-3h',
   $default_theme = 'light',
   $display_timezone = 'Etc/UTC',
   $ensure = undef,
