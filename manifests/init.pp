@@ -19,6 +19,9 @@
 #  Set the default name of the application which will appear on the main page. Rename to whatever
 #  you want.
 #
+# [*default_from_time*]
+#  Set the default relative time frame for the current view.
+#
 # [*default_refresh_interval*]
 #  The default interval at which the dashboard will refresh.
 #
